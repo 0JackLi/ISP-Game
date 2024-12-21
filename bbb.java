@@ -15,5 +15,6 @@ public class bbb extends Actor
     public void act()
     {
         // Add your action code here.
+        int k = 2;
     }
 }
