@@ -13,9 +13,24 @@ public class MyWorld extends World
      * Constructor for objects of class MyWorld.
      * 
      */
+    water Water = new water();
+    GreenfootImage waterImage = Water.getImage();
     public MyWorld()
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(600, 400, 1); 
+        prepareWater();
+    }
+    
+    /**
+     * Prepare the world for the start of the program.
+     * That is: create the initial objects and add them to the world.
+     */
+    private void prepareWater()
+    {
+        for(int i = 0; i < Math.round((double)getWidth()/waterImage.getWidth()); i++){
+            addObject(Water,  50 + waterImage.getWidth() * i, 35);
+            Water = new water();
+        }
     }
 }
