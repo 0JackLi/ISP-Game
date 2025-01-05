@@ -17,12 +17,16 @@ public class MyWorld extends World
     GreenfootImage waterImage = Water.getImage();
     BasicRoad basicroad = new BasicRoad(); 
     VerticalBasicRoad vbasicroad = new VerticalBasicRoad();
+    Tree tree = new Tree();
+    Grass grass = new Grass();
+    GreenfootImage grassImage = grass.getImage();
     public MyWorld()
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(600, 400, 1); 
         prepareWater();
         prepareFirstWorld();
+        setBackground(grassImage);
     }
 
     /**
@@ -41,9 +45,14 @@ public class MyWorld extends World
     {
         addObject(basicroad, 59, 88);
         addObject(vbasicroad, 14, 104);
+        addObject(tree, 45, 130);
         basicroad.constructRoad(59, 88, 3);
         vbasicroad.constructRoad(14,104, 5);
         basicroad.constructRoad(-1, 385, 4);
         basicroad.constructRoad(-1, 235, 4);
+        tree.constructTree(10, 100, 4);
+        tree.constructTree(45, 130, 3);
+        basicroad.constructRoad(-1, 160, 2);
+        basicroad.constructRoad(-1, 310, 2);
     }
 }
