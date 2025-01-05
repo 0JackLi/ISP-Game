@@ -49,10 +49,12 @@ public class MyWorld extends World
         basicroad.constructRoad(59, 88, 3);
         vbasicroad.constructRoad(14,104, 5);
         basicroad.constructRoad(-1, 385, 4);
-        basicroad.constructRoad(-1, 235, 4);
         tree.constructTree(10, 100, 4);
-        tree.constructTree(45, 130, 3);
         basicroad.constructRoad(-1, 160, 2);
+        tree.constructTree(10, 170, 4);
+        tree.constructTree(10, 200, 4);
+        basicroad.constructRoad(-1, 235, 4);
+        tree.constructTree(10, 250, 4);
         basicroad.constructRoad(-1, 310, 2);
     }
 }
