@@ -20,6 +20,8 @@ public class MyWorld extends World
     Tree tree = new Tree();
     Grass grass = new Grass();
     GreenfootImage grassImage = grass.getImage();
+    RuinedCar rCar = new RuinedCar(); 
+    Road road = new Road();
     public MyWorld()
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
@@ -46,15 +48,25 @@ public class MyWorld extends World
         addObject(basicroad, 59, 88);
         addObject(vbasicroad, 14, 104);
         addObject(tree, 45, 130);
+        addObject(road, 256, 295);
         basicroad.constructRoad(59, 88, 3);
         vbasicroad.constructRoad(14,104, 5);
-        basicroad.constructRoad(-1, 385, 4);
-        tree.constructTree(10, 100, 4);
-        basicroad.constructRoad(-1, 160, 2);
-        tree.constructTree(10, 170, 4);
-        tree.constructTree(10, 200, 4);
+        tree.constructTree(10, 100, 7);
+        //the road with the first ruined car
+        basicroad.constructRoad(-1, 160, 4);
+        addObject(rCar, 50, 160);
+        tree.constructTree(10, 200, 7);
         basicroad.constructRoad(-1, 235, 4);
-        tree.constructTree(10, 250, 4);
-        basicroad.constructRoad(-1, 310, 2);
+        tree.constructTree(10, 250, 3);
+        //the road with the second ruined car
+        basicroad.constructRoad(-1, 295, 2);
+        basicroad.constructRoad(148, 295, 1);
+        vbasicroad.constructRoad(163, 220, 1);
+        rCar.addRuinedCar(50, 295);
+        //the furtherest road on the left
+        tree.constructTree(10, 325, 7);
+        basicroad.constructRoad(-1, 385, 4);
+        //the middle long road
+        vbasicroad.constructRoad(283, 44, 6);
     }
 }
