@@ -31,6 +31,11 @@ public class Dieter extends Actor
         MyWorld world = (MyWorld) getWorld();
         setLocation(world.saydi.getX() - 17, world.saydi.getY());
         keyDown();
+         if(isTouching(MusicNote.class))
+        {
+            removeTouching(MusicNote.class);
+            ((MyWorld) getWorld()).addScore(50);
+        }
     }
     int k = 0;
     private void keyDown()

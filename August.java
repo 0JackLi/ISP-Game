@@ -31,6 +31,11 @@ public class August extends Actor
         MyWorld world = (MyWorld) getWorld();
         setLocation(world.kirsten.getX() - 20, world.kirsten.getY());
         keyDown();
+        if(isTouching(MusicNote.class))
+        {
+            removeTouching(MusicNote.class);
+            ((MyWorld) getWorld()).addScore(50);
+        }
     }
     int k = 0;
     private void keyDown()

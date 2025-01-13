@@ -27,6 +27,11 @@ public class MyWorld extends World
     August august;
     Saydi saydi; 
     Dieter dieter;
+    MusicNote note = new MusicNote();
+    SEComic sEComic = new SEComic();
+    int score = 0;
+    Label scoreLabel = new Label("Score: " + score, 40);
+    SimpleTimer noteSpawnTime = new SimpleTimer();
     public MyWorld()
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
@@ -35,6 +40,13 @@ public class MyWorld extends World
         prepareFirstWorld();
         setBackground(grassImage);
         prepareCharacter(); 
+        addObject(note, 0, 0);
+        addObject(scoreLabel, 380, 37);
+    }
+    public void act()
+    {
+        scoreLabel.setValue("Score: " + score + "/1000");
+        spawnSomeNotes();
     }
 
     /**
@@ -48,7 +60,23 @@ public class MyWorld extends World
             Water = new water();
         }
     }
-
+    
+    private void spawnSomeNotes()
+    {
+        if(noteSpawnTime.millisElapsed() >= 5000)
+        {
+            note.spawnNote();
+            noteSpawnTime.mark();
+        }
+    }
+    
+    private void checkScore()
+    {
+        if(score >= 1000)
+        {
+            sEComic.setImage(new GreenfootImage("SEcomic.jpg"));
+        }
+    }
     private void prepareFirstWorld()
     {
         addObject(basicroad, 59, 88);
@@ -132,5 +160,11 @@ public class MyWorld extends World
         addObject(road3,57,385);
         Road road4 = new Road();
         addObject(road4,525,88);
+        addObject(sEComic,510,37);
+    }
+    
+    public void addScore(int amount)
+    {
+        score += amount;
     }
 }

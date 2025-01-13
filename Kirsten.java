@@ -34,6 +34,11 @@ public class Kirsten extends Actor
     {
         // Add your action code here.
         keyDown();
+        if(isTouching(MusicNote.class))
+        {
+            removeTouching(MusicNote.class);
+            ((MyWorld) getWorld()).addScore(50);
+        }
     }
     private void rightWalkAni()
     {

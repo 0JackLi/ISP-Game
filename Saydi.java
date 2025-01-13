@@ -31,6 +31,11 @@ public class Saydi extends Actor
         MyWorld world = (MyWorld) getWorld();
         setLocation(world.august.getX() - 17, world.august.getY());
         keyDown();
+         if(isTouching(MusicNote.class))
+        {
+            removeTouching(MusicNote.class);
+            ((MyWorld) getWorld()).addScore(50);
+        }
     }
     int k = 0;
     private void keyDown()
