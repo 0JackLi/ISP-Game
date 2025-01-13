@@ -32,6 +32,9 @@ public class MyWorld extends World
     int score = 0;
     Label scoreLabel = new Label("Score: " + score, 40);
     SimpleTimer noteSpawnTime = new SimpleTimer();
+    public static final int WORLD_WIDTH = 600;
+    public static final int WORLD_HEIGHT = 400;
+    Prophet prophet; 
     public MyWorld()
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
@@ -41,12 +44,14 @@ public class MyWorld extends World
         setBackground(grassImage);
         prepareCharacter(); 
         addObject(note, 0, 0);
-        addObject(scoreLabel, 380, 37);
+        addObject(scoreLabel, 350, 37);
+        
     }
     public void act()
     {
         scoreLabel.setValue("Score: " + score + "/1000");
         spawnSomeNotes();
+        checkScore();
     }
 
     /**
@@ -84,6 +89,7 @@ public class MyWorld extends World
         addObject(tree, 10, 200);
         addObject(house, 60, 130);
         vbasicroad.constructRoad(14,104, 5);
+        vbasicroad.constructRoad(14, 280, 1);
         house.constructHouse(60, 130, 3);
         //the road with the first ruined car
         basicroad.constructRoad(-29, 160, 4);
@@ -137,10 +143,12 @@ public class MyWorld extends World
         august = new August();
         saydi = new Saydi();
         dieter = new Dieter();
+        prophet = new Prophet(1, 1);
         addObject(dieter, 93, 376);
         addObject(saydi, 110, 376);
         addObject(august, 127, 376);
         addObject(kirsten,147,376);
+        addObject(prophet, 50, 80);
     }
     /**
      * Prepare the world for the start of the program.
@@ -166,5 +174,17 @@ public class MyWorld extends World
     public void addScore(int amount)
     {
         score += amount;
+        if(score >= 1000)
+        {
+            score = 1000;
+        }
+    }
+    private void addBorder()
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            addObject(new HorizontalBorder(), getWidth() / 2, (i % 2 == 0) ? 73 : getHeight());
+            addObject(new VerticalBorder(), i * getWidth() , getHeight() / 2); 
+        }
     }
 }
