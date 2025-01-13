@@ -29,6 +29,7 @@ public class MyWorld extends World
         prepareWater();
         prepareFirstWorld();
         setBackground(grassImage);
+        prepareCharacter(); 
     }
 
     /**
@@ -48,7 +49,6 @@ public class MyWorld extends World
         addObject(basicroad, 59, 88);
         addObject(vbasicroad, 14, 104);
         addObject(tree, 45, 130);
-        addObject(road, 256, 295);
         basicroad.constructRoad(59, 88, 3);
         vbasicroad.constructRoad(14,104, 5);
         tree.constructTree(10, 100, 7);
@@ -68,5 +68,22 @@ public class MyWorld extends World
         basicroad.constructRoad(-1, 385, 4);
         //the middle long road
         vbasicroad.constructRoad(283, 44, 6);
+            addObject(road, 256, 295);
+            road = new Road();
+            addObject(road, 268, 385);
     }
+
+    /**
+     * Prepare the world for the start of the program.
+     * That is: create the initial objects and add them to the world.
+     */
+    private void prepareCharacter()
+    {
+        Kirsten kirsten = new Kirsten();
+        addObject(kirsten,147,376);
+    }
+    /**
+     * Prepare the world for the start of the program.
+     * That is: create the initial objects and add them to the world.
+     */
 }
