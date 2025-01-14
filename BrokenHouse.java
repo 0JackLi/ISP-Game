@@ -19,12 +19,20 @@ public class BrokenHouse extends Actor
     {
         // Add your action code here.
     }
-    public void constructHouse(int x, int y, int amount)
+    public void constructHouse(int x, int y, int amount, int e)
     {
         world = getWorld();
         for(int i = 1; i <= amount; i++)
         {
             house = new BrokenHouse();
+            if(e == 0)
+            {
+                house.setImage("brokenhouse.png");
+            }
+            else if(e == 1)
+            {
+                house.setImage("redBrickBuilding.png");
+            }
             world.addObject(house, x + image.getWidth() * i, y);
         }
     }

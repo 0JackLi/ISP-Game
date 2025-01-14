@@ -22,12 +22,20 @@ public class BasicRoad extends Actor
     {
         // Add your action code here.
     }
-    public void constructRoad(int x, int y, int amount)
+    public void constructRoad(int x, int y, int amount, int e)
     {
         world = getWorld();
         for(int i = 1; i <= amount; i++)
         {
             road = new BasicRoad();
+            if(e == 0)
+            {
+                road.setImage("BasicRoad1.jpg");
+            }
+            else if(e == 1)
+            {
+                road.setImage("lBasicRoad.png");
+            }
             world.addObject(road, x + image.getWidth() * i, y);
         }
     }

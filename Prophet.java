@@ -6,14 +6,17 @@ import java.util.ArrayList;
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Prophet extends Actor
+public class Prophet extends Enemy
 {
     /**
      * Act - do whatever the Prophet wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
-     */
+     */    
     private boolean checkSideway;
-    private String walkingDirection= "right"; 
+    private int randomAct, reloadAct;
+    private VerticalDetection upwardDetection, downwardDetection;
+    private HorizontalDetection leftwardDetection, rightwardDetection;
+    public String walkingDirection; 
     GreenfootImage[] image = new GreenfootImage[6];
     GreenfootImage[] invertedImage = new GreenfootImage[6];
     SimpleTimer timer = new SimpleTimer();
@@ -23,23 +26,50 @@ public class Prophet extends Actor
     public Prophet(int x, int y)
     {
         checkSideway = true;
+        randomAct = 0;
+        reloadAct = 600; // 60 acts / second, 600 acts in 10 seconds
+        upwardDetection = new VerticalDetection(this, -1);
+        downwardDetection = new VerticalDetection(this, 1);
+        leftwardDetection = new HorizontalDetection(this, -1);
+        rightwardDetection = new HorizontalDetection(this, 1);
+        
         for(int i = 0; i < 6; i++)
         {
-            image[i] = new GreenfootImage("Kirsten" + i + ".png");
-            invertedImage[i] = new GreenfootImage("Kirsten" + i + ".png");
+            image[i] = new GreenfootImage("prophet" + i + ".png");
+            invertedImage[i] = new GreenfootImage("prophet" + i + ".png");
             invertedImage[i].mirrorHorizontally();
             speedX = x;
             speedY = y;
         }
     }
+    
+    public void addedToWorld(World world)
+    {
+        world.addObject(upwardDetection, 0, 0);
+        world.addObject(downwardDetection, 0, 0);
+        world.addObject(leftwardDetection,0, 0);
+        world.addObject(rightwardDetection, 0, 0);
+    }
+    
     public void act()
     {
         // Add your action code here.
-        checkPlayer(((MyWorld) getWorld()).kirsten);
+        //checkPlayer(((MyWorld) getWorld()).kirsten);
+        if (rightwardDetection.hasSpotted() || leftwardDetection.hasSpotted() || downwardDetection.hasSpotted() || upwardDetection.hasSpotted()){
+            chasePlayer();
+            if (reloadAct == 0)
+                shootBullet();
+        }
+        else
+            randomMovement();
+        
+        directionMovement();
+        reloadAct = (reloadAct == 0) ? reloadAct : reloadAct - 1;
     }
+    
     private void directionMovement()
     {
-        if(keepLeft)
+        if(walkingDirection == "left")
         {
             leftWalkAni();
         }
@@ -50,8 +80,9 @@ public class Prophet extends Actor
 
         if (checkSideway)
         {
-            if (!checkSideway())
+            if (!checkSideway()){
                 speedX = 0;
+            }
         }
         else
         {
@@ -61,82 +92,74 @@ public class Prophet extends Actor
         movement(speedX, speedY);
     }
         
-    private boolean checkSideway()
+    private boolean checkUpDown()
     {
-        boolean validRoad = false;
-        boolean validObstacle = true;
-        if (walkingDirection.equals("left"))
-        {
-            ArrayList<Actor> leftEncounters = (ArrayList<Actor>)getObjectsAtOffset(-getImage().getWidth() / 2, getImage().getHeight() / 2 - 5, Actor.class);
-            for (Actor leftEncounter : leftEncounters)
-            {
-                if (leftEncounter instanceof BasicRoad || leftEncounter instanceof Road)
-                {
-                    validRoad = true;
-                }
-                
-                if (leftEncounter instanceof WorldBorder || leftEncounter instanceof RuinedCar)
-                {
-                    validObstacle = false;
-                }
-            }
-        }
-        else
-        {
-            ArrayList<Actor> rightEncounters = (ArrayList<Actor>)getObjectsAtOffset(getImage().getWidth() / 2, getImage().getHeight() / 2 - 5, Actor.class);
-            for (Actor rightEncounter : rightEncounters)
-            {
-                if (rightEncounter instanceof BasicRoad || rightEncounter instanceof Road)
-                {
-                    validRoad = true;
-                }
-                
-                if (rightEncounter instanceof WorldBorder || rightEncounter instanceof RuinedCar)
-                {
-                    validObstacle = false;
-                }
-            }
-        }
-        return validRoad && validObstacle;
-    }
-     private boolean checkUpDown()
-    {
-        boolean validRoad = false;
-        boolean validObstacle = true;
         if(walkingDirection.equals("up"))
         {
-            ArrayList<Actor> upEncounters = (ArrayList<Actor>)getObjectsAtOffset(0, 0, Actor.class);
-            for (Actor upEncounter : upEncounters)
+            for (int i = 0; i < 3; i++)
             {
-                if (upEncounter instanceof VerticalBasicRoad)
+                ArrayList<Actor> upEncounters = (ArrayList<Actor>)getObjectsAtOffset(i * 5 - 5, 0, Actor.class);
+                for (Actor upEncounter : upEncounters)
                 {
-                    validRoad = true;;
+                    if (upEncounter instanceof WorldBorder || upEncounter instanceof RuinedCar)
+                    {
+                        return false;
+                    }
                 }
-                
-                if (upEncounter instanceof WorldBorder || upEncounter instanceof RuinedCar)
+            }
+
+        }
+        else
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                ArrayList<Actor> downEncounters = (ArrayList<Actor>)getObjectsAtOffset(i * 5 - 5, getImage().getHeight() / 2 + 5, Actor.class);
+                for (Actor downEncounter : downEncounters)
                 {
-                    validObstacle = false;
+                    if (downEncounter instanceof WorldBorder || downEncounter instanceof RuinedCar)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+        }
+        return true;
+    }
+
+    private boolean checkSideway()
+    {
+        if (walkingDirection.equals("left"))
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                ArrayList<Actor> leftEncounters = (ArrayList<Actor>)getObjectsAtOffset(-getImage().getWidth() / 2, i * (getImage().getHeight() / 2) + 4, Actor.class);
+                for (Actor leftEncounter : leftEncounters)
+                {
+                    if (leftEncounter instanceof WorldBorder || leftEncounter instanceof RuinedCar)
+                    {
+                        return false;
+                    }
                 }
             }
         }
         else
         {
-            ArrayList<Actor> downEncounters = (ArrayList<Actor>)getObjectsAtOffset(0, getImage().getHeight() / 2 + 5, Actor.class);
-            for (Actor downEncounter : downEncounters)
+            for (int i = 0; i < 2; i++)
             {
-                if (downEncounter instanceof VerticalBasicRoad)
+                ArrayList<Actor> rightEncounters = (ArrayList<Actor>)getObjectsAtOffset(getImage().getWidth() / 2, i * (getImage().getHeight() / 2) + 4, Actor.class);
+                for (Actor rightEncounter : rightEncounters)
                 {
-                    validRoad = true;   
-                }
-                
-                if (downEncounter instanceof WorldBorder || downEncounter instanceof RuinedCar)
-                {
-                    validObstacle = false;
+                    if (rightEncounter instanceof WorldBorder || rightEncounter instanceof RuinedCar)
+                    {
+                        return false;
+                    }
                 }
             }
         }
-        return validRoad && validObstacle;
+        return true;
     }
+    
     private void rightWalkAni()
     {
         if(timer.millisElapsed() >= 100)
@@ -160,6 +183,7 @@ public class Prophet extends Actor
     {
         this.setLocation(this.getX() + x, this.getY() + y);
     }
+    
     private void checkPlayer(Actor actor)
     {
         if(this.getX() != actor.getX() && this.getY() != actor.getY())
@@ -203,6 +227,85 @@ public class Prophet extends Actor
                     movement(speedX, 0); 
                 }
             }
+        }
+    }
+    
+    private void chasePlayer()
+    {
+        speedX = 0;
+        speedY = 0;
+        if (rightwardDetection.hasSpotted())
+        {
+            walkingDirection = "right";
+            checkSideway = true;
+            speedX = 1;
+        }
+        else if (leftwardDetection.hasSpotted())
+        {
+            walkingDirection = "left";
+            checkSideway = true;
+            speedX = -1;
+        }
+        
+        if (upwardDetection.hasSpotted())
+        {
+            walkingDirection = "up";
+            checkSideway = false;
+            speedY = -1;
+        }
+        else if (downwardDetection.hasSpotted())
+        {
+            walkingDirection = "down";
+            checkSideway = false;
+            speedY = 1;
+        }
+    }
+    
+    private void shootBullet()
+    {
+        getWorld().addObject(new Bullet((int)Math.signum(speedX), (int)Math.signum(speedY)), getX() + (int)Math.signum(speedX) * getImage().getWidth() / 2, getY() + (int)Math.signum(speedY) * getImage().getHeight() / 2); 
+        reloadAct = 600;
+    }
+    
+    private void randomMovement()
+    {
+        if (randomAct <= 0)
+        {
+            randomAct = Greenfoot.getRandomNumber(120) + 40;
+            if (Greenfoot.getRandomNumber(2) == 1)
+            {
+                checkSideway = true;
+                if (Greenfoot.getRandomNumber(2) == 1)
+                {
+                    walkingDirection = "left";
+                    speedX = -1;
+                }
+                else
+                {
+                    walkingDirection = "right";
+                    speedX = 1;
+                }
+                speedY = 0;
+            }
+            else
+            {
+                checkSideway = false;
+                if (Greenfoot.getRandomNumber(2) == 1)
+                {
+                    walkingDirection = "up";
+                    speedY = -1;
+                }
+                else
+                {
+                    walkingDirection = "down";
+                    speedY = 1;
+                }
+                speedX = 0;
+            }
+        }
+        else
+        {
+            randomAct--;
         }
     }
 }

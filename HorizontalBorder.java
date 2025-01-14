@@ -12,14 +12,8 @@ public class HorizontalBorder extends WorldBorder
      * Act - do whatever the HorizontalBorder wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
-    public HorizontalBorder()
+    public HorizontalBorder(int imageSize)
     {
-        super();
-        setImage(horizontalImage);
-    }
-    
-    public void act()
-    {
-        // Add your action code here.
+        super(imageSize, 5);
     }
 }

@@ -19,12 +19,21 @@ public class VerticalBasicRoad extends Actor
     {
         // Add your action code here.
     }
-    public void constructRoad(int x, int y, int amount)
+
+    public void constructRoad(int x, int y, int amount, int e)
     {
         world = getWorld();
         for(int i = 1; i <= amount; i++)
         {
             road = new VerticalBasicRoad();
+            if(e == 0)
+            {
+                road.setImage("vertical.png");
+            }
+            else if(e == 1)
+            {
+                road.setImage("verticalLRoad.png");
+            }
             world.addObject(road, x, y + image.getHeight() * i);
         }
     }

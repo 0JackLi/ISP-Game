@@ -16,13 +16,27 @@ public class MusicNote extends Actor
     SimpleTimer timer = new SimpleTimer();
     Random random = new Random();
     MusicNote note;
+    private int animationMovement;
+    private boolean isUp;
     public MusicNote()
     {
+        animationMovement = 10;
     }
     public void act()
     {
         // Add your action code here.
-        
+        if (!isUp)
+        {
+            setLocation(getX(), getY() + 1);
+            animationMovement = animationMovement - 1;
+            isUp = (animationMovement <= 0);
+        }
+        else
+        {
+            setLocation(getX(), getY() - 1);
+            animationMovement = animationMovement + 1;
+            isUp = !(animationMovement >= 10);
+        }
     }
     public void spawnNote()
     {

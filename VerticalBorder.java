@@ -13,9 +13,13 @@ public class VerticalBorder extends WorldBorder
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     
-    public VerticalBorder()
+    public VerticalBorder(int imageSize)
     {
-        super();
-        setImage(verticalImage);
+        super(5, imageSize);
+    }
+    
+    public void act()
+    {
+        
     }
 }

@@ -8,12 +8,35 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Bullet extends Actor
 {
-    /**
-     * Act - do whatever the Bullet wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
+    private static GreenfootImage bulletImage;
+    private int xDirection, yDirection;
+    public Bullet(int xDirection, int yDirection)
+    {
+        bulletImage = new GreenfootImage("bullet.png");
+        this.xDirection = xDirection;
+        this.yDirection = yDirection;
+        setImage(bulletImage);
+    }
+    
+    private void tweakImage()
+    {
+        if (xDirection == 1)
+        {
+            setRotation(getRotation() + 180);
+        }
+        
+        if (yDirection == 1)
+        {
+            setRotation(getRotation() - 90);
+        }
+        else
+        {
+            setRotation(getRotation() + 90);
+        }
+    }
+
     public void act()
     {
-        // Add your action code here.
+        setLocation(getX() + 2 * xDirection, getY() + 2 * yDirection); 
     }
 }

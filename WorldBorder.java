@@ -8,15 +8,17 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public abstract class WorldBorder extends Actor
 {
-    protected static GreenfootImage horizontalImage, verticalImage;
-    public WorldBorder()
+    protected static GreenfootImage borderImage;
+    public static final boolean hideBorder = false;
+    public WorldBorder(int imageWidth, int imageHeight)
     {
-        verticalImage = new GreenfootImage(1, MyWorld.WORLD_HEIGHT);
-        horizontalImage = new GreenfootImage(MyWorld.WORLD_WIDTH, 1);
-        verticalImage.setColor(Color.RED);
-        horizontalImage.setColor(Color.RED);
-        verticalImage.fillRect(0, 0, verticalImage.getWidth(), verticalImage.getHeight());
-        horizontalImage.fillRect(0, 0, horizontalImage.getWidth(), horizontalImage.getHeight());
+        borderImage = new GreenfootImage(imageWidth, imageHeight);
+        if (hideBorder)
+            borderImage.setTransparency(0);
+        
+        borderImage.setColor(Color.RED);
+        borderImage.fillRect(0, 0, borderImage.getWidth(), borderImage.getHeight());
+        setImage(borderImage);
     }
     
     public void act()

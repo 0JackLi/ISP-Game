@@ -19,12 +19,20 @@ public class Tree extends Actor
     {
         // Add your action code here.
     }
-    public void constructTree(int x, int y, int amount)
+    public void constructTree(int x, int y, int amount, int e)
     {
         world = getWorld();
         for(int i = 1; i <= amount; i++)
         {
             tree = new Tree();
+            if(e == 0)
+            {
+                tree.setImage("tree.png");
+            }
+            else if(e == 1)
+            {
+                tree.setImage("mapleTree.png");
+            }
             world.addObject(tree, x + (image.getWidth() - 25) * i, y);
         }
     }

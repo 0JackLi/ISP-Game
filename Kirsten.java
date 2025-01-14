@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Kirsten extends Actor
+public class Kirsten extends Player
 {
     /**
      * Act - do whatever the Kirsten wants to do. This method is called whenever
@@ -126,34 +126,6 @@ public class Kirsten extends Actor
             rightWalkAni();
         }
 
-        // if(walkingDirection == "up" && checkUpDown())
-        // {
-        // speedX = 0;
-        // speedY = -1;
-        // }
-        // else if(walkingDirection == "down" && checkUpDown())
-        // {
-        // speedX = 0;
-        // speedY = 1;
-        // }
-        // else if(walkingDirection == "left")
-        // {
-        // nowDirection = "left";
-        // if(checkSideway()){
-        // speedX = -1;
-        // speedY = 0;
-        // }
-        // }
-        // else if(walkingDirection == "right")
-        // {
-        // nowDirection = "right";
-        // if(checkSideway())
-        // {
-        // speedX = 1;
-        // speedY = 0;
-        // }
-        // }
-
         if (checkSideway)
         {
             if (!checkSideway())
@@ -167,7 +139,7 @@ public class Kirsten extends Actor
         movement(speedX, speedY);
     }
 
-    private boolean checkUpDown()
+    public boolean checkUpDown()
     {
         boolean validRoad = false;
         boolean validObstacle = true;
@@ -206,7 +178,7 @@ public class Kirsten extends Actor
         return validRoad && validObstacle;
     }
 
-    private boolean checkSideway()
+    public boolean checkSideway()
     {
         boolean validRoad = false;
         boolean validObstacle = true;

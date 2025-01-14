@@ -6,7 +6,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class August extends Actor
+public class August extends Player
 {
     /**
      * Act - do whatever the August wants to do. This method is called whenever
@@ -16,6 +16,8 @@ public class August extends Actor
     GreenfootImage[] invertedImage = new GreenfootImage[6];
     SimpleTimer timer = new SimpleTimer();
     boolean keepLeft = false;
+    boolean isUp = false, isDown = false, isLeft = false, isRight = true;
+    MyWorld world;
     public August()
     {
         for(int i = 0; i < 6; i++)
@@ -28,14 +30,14 @@ public class August extends Actor
 
     public void act()
     {
-        MyWorld world = (MyWorld) getWorld();
-        setLocation(world.kirsten.getX() - 20, world.kirsten.getY());
+        world = (MyWorld) getWorld();
         keyDown();
         if(isTouching(MusicNote.class))
         {
             removeTouching(MusicNote.class);
             ((MyWorld) getWorld()).addScore(50);
         }
+        withKirsten();
     }
     int k = 0;
     private void keyDown()
@@ -73,6 +75,54 @@ public class August extends Actor
             timer.mark();
             k = (k + 1) % 6;
             this.setImage(invertedImage[k]);
+        }
+    }
+    private void withKirsten()
+    {
+        if(((MyWorld) getWorld()).kirsten.checkUpDown() && Greenfoot.isKeyDown("W"))
+        {
+            isUp = true;
+            isDown = false;
+            isRight = false;
+            isLeft = false;
+        }
+        else if(((MyWorld) getWorld()).kirsten.checkUpDown() && Greenfoot.isKeyDown("S"))
+        {
+            isUp = false;
+            isDown = true;
+            isRight = false;
+            isLeft = false;
+        }
+        else if(((MyWorld) getWorld()).kirsten.checkSideway() && Greenfoot.isKeyDown("A"))
+        {
+            isUp = false;
+            isDown = false;
+            isRight = false;
+            isLeft = true;
+        }
+        else if(((MyWorld) getWorld()).kirsten.checkSideway() && Greenfoot.isKeyDown("D"))
+        {
+            isUp = false;
+            isDown = false;
+            isRight = true;
+            isLeft = false;
+        }
+
+        if(isUp)
+        {
+            setLocation(world.kirsten.getX(), world.kirsten.getY() + 20);
+        }
+        else if(isDown)
+        {
+            setLocation(world.kirsten.getX(), world.kirsten.getY() - 20); 
+        }
+        else if(isLeft)
+        {
+            setLocation(world.kirsten.getX() - 20, world.kirsten.getY());
+        }
+        else if(isRight)
+        {
+            setLocation(world.kirsten.getX() - 20, world.kirsten.getY());
         }
     }
 }

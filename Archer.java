@@ -6,7 +6,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Archer extends Actor
+public class Archer extends Enemy
 {
     /**
      * Act - do whatever the Archer wants to do. This method is called whenever
@@ -15,5 +15,12 @@ public class Archer extends Actor
     public void act()
     {
         // Add your action code here.
+    }
+    private void prophetFollow()
+    {
+        if(((MyWorld) getWorld()).prophet.walkingDirection == "left")
+        {
+            this.setLocation(prophet
+        }
     }
 }
