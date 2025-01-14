@@ -1,5 +1,6 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
-
+import greenfoot.*; 
+import java.util.Random;
+ // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 /**
  * Write a description of class MyWorld here.
  * 
@@ -13,6 +14,7 @@ public class MyWorld extends World
      * Constructor for objects of class MyWorld.
      * 
      */
+    Random random = new Random();
     PearlSky sky = new PearlSky();
     water Water = new water();
     GreenfootImage waterImage = Water.getImage();
@@ -58,13 +60,13 @@ public class MyWorld extends World
         setBackground(grassImage);
         prepareCharacter(); 
         addObject(scoreLabel, 350, 37);
-        
     }
     public void act()
     {
         scoreLabel.setValue("Score: " + score + "/1000");
         spawnSomeNotes();
         checkScore();
+        checkOnClick();
     }
 
     /**
@@ -83,7 +85,7 @@ public class MyWorld extends World
     {
         if(noteSpawnTime.millisElapsed() >= 5000)
         {
-            note.spawnNote();
+            spawnNote();
             noteSpawnTime.mark();
         }
     }
@@ -105,6 +107,27 @@ public class MyWorld extends World
             addObject(red, 250, 200);
         }
     }
+    public void spawnNote()
+    {
+        for(int i = 0; i < 2; i++)
+        {
+            note = new MusicNote();
+            int k = random.nextInt(200);
+            addObject(note,  15, 100 + k);
+        }
+        for(int i = 0; i < 2; i++)
+        {
+            note = new MusicNote();
+            int k = random.nextInt(200);
+            addObject(note,  435, 100 + k);
+        }
+        for(int i = 0; i < 1; i++)
+        {
+            note = new MusicNote();
+            int k = random.nextInt(300);
+            addObject(note,  0 + k, 80);
+        }
+    }
     private void prepareFirstWorld()
     {
         
@@ -117,14 +140,14 @@ public class MyWorld extends World
         house.constructHouse(60, 130, 3, 0);
         //the road with the first ruined car
         basicroad.constructRoad(-29, 160, 4, 0);
-        addObject(rCar, 50, 160);
+        addObject(rCar, 60, 160);
         house.constructHouse(0, 180, 3, 0);
         tree.constructTree(10, 200, 7, 0);
         //the road with the second ruined car
         vbasicroad.constructRoad(163, 191, 1, 0);
         vbasicroad.constructRoad(163, 220, 1, 0);
         basicroad.constructRoad(-29, 295, 3, 0);
-        rCar.addRuinedCar(50, 295);
+        rCar.addRuinedCar(60, 295);
         //the furtherest road on the left
         //the middle long road
         vbasicroad.constructRoad(283, 44, 6, 0);
@@ -264,14 +287,14 @@ public class MyWorld extends World
         house.constructHouse(60, 130, 3, 1);
         //the road with the first ruined car
         basicroad.constructRoad(-29, 160, 4, 0);
-        addObject(rCar, 50, 160);
+        addObject(rCar, 60, 160);
         house.constructHouse(0, 180, 3, 1);
         tree.constructTree(10, 200, 6, 1);
         //the road with the second ruined car
         vbasicroad.constructRoad(163, 191, 1, 0);
         vbasicroad.constructRoad(163, 220, 1, 0);
         basicroad.constructRoad(-29, 295, 3, 0);
-        rCar.addRuinedCar(50, 295);
+        rCar.addRuinedCar(60, 295);
         //the furtherest road on the left
         //the middle long road
         vbasicroad.constructRoad(283, 44, 6, 0);
@@ -337,7 +360,9 @@ public class MyWorld extends World
         if(strengthTimer.millisElapsed() >= 1000)
         {
             GreenfootImage img = red.getImage();
-            img.scale(img.getWidth() - 2, img.getHeight());
+            int w = 60;
+            img.scale(w - 2, 30);
+            strengthTimer.mark();
         }
     }
     /**
