@@ -43,7 +43,9 @@ public class MyWorld extends World
     SimpleTimer noteSpawnTime = new SimpleTimer();
     public static final int WORLD_WIDTH = 600;
     public static final int WORLD_HEIGHT = 400;
-    Prophet prophet; 
+    Prophet prophet;
+    CrossBower crossbower;
+    Archer archer; 
     public MyWorld()
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
@@ -89,6 +91,13 @@ public class MyWorld extends World
         if(score >= 1000)
         {
             sEComic.setImage(new GreenfootImage("SEcomic.jpg"));
+        }
+    }
+    private void checkOnClick()
+    {
+        if(Greenfoot.mouseClicked(sEComic) && score >= 1000)
+        {
+            
         }
     }
     private void prepareFirstWorld()
@@ -308,10 +317,14 @@ public class MyWorld extends World
         saydi = new Saydi();
         dieter = new Dieter();
         prophet = new Prophet(1, 1);
+        crossbower = new CrossBower();
+        Archer archer = new Archer();
         addObject(dieter, 93, 376);
         addObject(saydi, 110, 376);
         addObject(august, 127, 376);
         addObject(kirsten,147,376);
+        addObject(archer, 10, 80);
+        addObject(crossbower, 30, 80);
         addObject(prophet, 50, 80);
     }
     /**

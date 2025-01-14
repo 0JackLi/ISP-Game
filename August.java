@@ -59,7 +59,7 @@ public class August extends Player
             rightWalkAni();
         }
     }
-     private void rightWalkAni()
+    private void rightWalkAni()
     {
         if(timer.millisElapsed() >= 100)
         {
