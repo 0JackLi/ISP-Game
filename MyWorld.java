@@ -28,6 +28,7 @@ public class MyWorld extends World
     Moon moon = new Moon();
     Darkness dark = new Darkness();
     pink Pink = new pink();
+    Red red = new Red();
     BrokenHouse house = new BrokenHouse();
     Bush bush = new Bush();
     SignPost sign = new SignPost();
@@ -41,6 +42,7 @@ public class MyWorld extends World
     int score = 0;
     Label scoreLabel = new Label("Score: " + score, 40);
     SimpleTimer noteSpawnTime = new SimpleTimer();
+    SimpleTimer strengthTimer = new SimpleTimer();
     public static final int WORLD_WIDTH = 600;
     public static final int WORLD_HEIGHT = 400;
     Prophet prophet;
@@ -97,7 +99,10 @@ public class MyWorld extends World
     {
         if(Greenfoot.mouseClicked(sEComic) && score >= 1000)
         {
-            
+            removeObject(sEComic);
+            removeObject(scoreLabel);
+            red = new Red();
+            addObject(red, 250, 200);
         }
     }
     private void prepareFirstWorld()
@@ -326,6 +331,14 @@ public class MyWorld extends World
         addObject(archer, 10, 80);
         addObject(crossbower, 30, 80);
         addObject(prophet, 50, 80);
+    }
+    private void strengthBar()
+    {
+        if(strengthTimer.millisElapsed() >= 1000)
+        {
+            GreenfootImage img = red.getImage();
+            img.scale(img.getWidth() - 2, img.getHeight());
+        }
     }
     /**
      * Prepare the world for the start of the program.
