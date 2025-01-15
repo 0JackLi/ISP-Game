@@ -42,7 +42,7 @@ public class MyWorld extends World
     MusicNote note = new MusicNote();
     SEComic sEComic = new SEComic();
     Sign sign2 = new Sign();
-    public int score = 1000;
+    public int score = 0;
     Label scoreLabel = new Label("Score: " + score, 40);
     Label secLabel = new Label("Time: " + 30, 20);
     Label endLabel = new Label("Time: 300", 25);
@@ -83,7 +83,7 @@ public class MyWorld extends World
         
         if(enemyHealth <= 2 && isT)
         {
-            score = 1000;
+            score = 0;
             sound.stop();
             removeObjects(getObjects(Actor.class));
             prepareSecondWorld();
@@ -98,7 +98,7 @@ public class MyWorld extends World
         }
         else if(enemyHealth <= 1 && isF)
         {
-            score = 1000;
+            score = 0;
             sound.stop();
             removeObjects(getObjects(Actor.class));
             prepareFinalWorld();
