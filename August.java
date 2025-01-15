@@ -35,6 +35,7 @@ public class August extends Player
         keyDown();
         if(isTouching(MusicNote.class))
         {
+            sound = new GreenfootSound("sounds/coin.mp3");
             sound.play();
             removeTouching(MusicNote.class);
             ((MyWorld) getWorld()).addScore(50);
