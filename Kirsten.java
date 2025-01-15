@@ -17,11 +17,17 @@ public class Kirsten extends Player
     GreenfootImage[] invertedImage = new GreenfootImage[6];
     SimpleTimer timer = new SimpleTimer();
     SimpleTimer delay = new SimpleTimer();
+    SimpleTimer knifeTimer = new SimpleTimer();
     private String walkingDirection= "right"; 
     int k = 0;
     int speedX = 1, speedY = 0;
     boolean canSwitch = true; 
     boolean keepLeft = false;
+    MyWorld world;
+    boolean canIndi = false;
+    int num = 1;
+    GreenfootSound sound = new GreenfootSound("sounds/stab.mp3");
+    GreenfootSound sound2 = new GreenfootSound("sounds/coin.mp3");
     public Kirsten()
     {
         checkSideway = true;
@@ -36,9 +42,12 @@ public class Kirsten extends Player
     public void act()
     {
         // Add your action code here.
+        world = (MyWorld) getWorld();
         keyDown();
         if(isTouching(MusicNote.class))
         {
+            sound2 = new GreenfootSound("sounds/coin.mp3");
+            sound2.play();
             removeTouching(MusicNote.class);
             ((MyWorld) getWorld()).addScore(50);
         }
@@ -70,51 +79,50 @@ public class Kirsten extends Player
         {
             walkingDirection = "right";
             checkSideway = true;
-            if(checkSideway()){
-                rightWalkAni();
-                speedX = 1;
-                speedY = 0;
-                keepLeft = false;
+           
+            rightWalkAni();
+            speedX = num;
+            speedY = 0;
+            keepLeft = false;
                 //walkingDirection = "";
                 //delay.mark();
-            }
+            
 
         }
         else if (Greenfoot.isKeyDown("A"))
         {
             walkingDirection = "left";
             checkSideway = true;
-            if(checkSideway()){
+            //if(checkSideway()){
                 leftWalkAni();
                 //walkingDirection = "";
-                speedX = -1;
+                speedX = -num;
                 speedY = 0;
                 keepLeft = true;
                 //delay.mark();
-            }
+                
+            //}
 
         }
         else if(Greenfoot.isKeyDown("W"))
         {
             walkingDirection = "up";
             checkSideway = false;
-            if(checkUpDown()){
-                speedX = 0;
-                speedY = -1;
+            speedX = 0;
+            speedY = -num;
                 //walkingDirection = "";
                 //delay.mark();
-            }
         }
         else if(Greenfoot.isKeyDown("S"))
         {
             walkingDirection = "down";
             checkSideway = false;
-            if(checkUpDown()){
-                speedX = 0;
-                speedY = 1;
+            
+            speedX = 0;
+            speedY = num;
                 //walkingDirection = "";
                 //delay.mark();
-            }
+            
         }
 
         if(keepLeft)
@@ -125,6 +133,34 @@ public class Kirsten extends Player
         {
             rightWalkAni();
         }
+
+        // if(walkingDirection == "up" && checkUpDown())
+        // {
+        // speedX = 0;
+        // speedY = -1;
+        // }
+        // else if(walkingDirection == "down" && checkUpDown())
+        // {
+        // speedX = 0;
+        // speedY = 1;
+        // }
+        // else if(walkingDirection == "left")
+        // {
+        // nowDirection = "left";
+        // if(checkSideway()){
+        // speedX = -1;
+        // speedY = 0;
+        // }
+        // }
+        // else if(walkingDirection == "right")
+        // {
+        // nowDirection = "right";
+        // if(checkSideway())
+        // {
+        // speedX = 1;
+        // speedY = 0;
+        // }
+        // }
 
         if (checkSideway)
         {
@@ -141,80 +177,95 @@ public class Kirsten extends Player
 
     public boolean checkUpDown()
     {
-        boolean validRoad = false;
-        boolean validObstacle = true;
         if(walkingDirection.equals("up"))
         {
-            ArrayList<Actor> upEncounters = (ArrayList<Actor>)getObjectsAtOffset(0, 0, Actor.class);
-            for (Actor upEncounter : upEncounters)
+            for (int i = 0; i < 3; i++)
             {
-                if (upEncounter instanceof VerticalBasicRoad)
+                ArrayList<Actor> upEncounters = (ArrayList<Actor>)getObjectsAtOffset(i * 5 - 5, 0, Actor.class);
+                for (Actor upEncounter : upEncounters)
                 {
-                    validRoad = true;;
-                }
-                
-                if (upEncounter instanceof WorldBorder || upEncounter instanceof RuinedCar)
-                {
-                    validObstacle = false;
+                    if (upEncounter instanceof WorldBorder || upEncounter instanceof RuinedCar || upEncounter instanceof FallenTree || upEncounter instanceof SignPost)
+                    {
+                        return false;
+                    }
                 }
             }
+
         }
         else
         {
-            ArrayList<Actor> downEncounters = (ArrayList<Actor>)getObjectsAtOffset(0, getImage().getHeight() / 2 + 5, Actor.class);
-            for (Actor downEncounter : downEncounters)
+            for (int i = 0; i < 3; i++)
             {
-                if (downEncounter instanceof VerticalBasicRoad)
+                ArrayList<Actor> downEncounters = (ArrayList<Actor>)getObjectsAtOffset(i * 5 - 5, getImage().getHeight() / 2 + 5, Actor.class);
+                for (Actor downEncounter : downEncounters)
                 {
-                    validRoad = true;   
-                }
-                
-                if (downEncounter instanceof WorldBorder || downEncounter instanceof RuinedCar)
-                {
-                    validObstacle = false;
+                    if (downEncounter instanceof WorldBorder || downEncounter instanceof RuinedCar || downEncounter instanceof FallenTree
+                    || downEncounter instanceof SignPost)
+                    {
+                        return false;
+                    }
                 }
             }
+
         }
-        return validRoad && validObstacle;
+        return true;
     }
 
     public boolean checkSideway()
     {
-        boolean validRoad = false;
-        boolean validObstacle = true;
         if (walkingDirection.equals("left"))
         {
-            ArrayList<Actor> leftEncounters = (ArrayList<Actor>)getObjectsAtOffset(-getImage().getWidth() / 2, getImage().getHeight() / 2 - 5, Actor.class);
-            for (Actor leftEncounter : leftEncounters)
+            for (int i = 0; i < 2; i++)
             {
-                if (leftEncounter instanceof BasicRoad || leftEncounter instanceof Road)
+                ArrayList<Actor> leftEncounters = (ArrayList<Actor>)getObjectsAtOffset(-getImage().getWidth() / 2, i * (getImage().getHeight() / 2) + 4, Actor.class);
+                for (Actor leftEncounter : leftEncounters)
                 {
-                    validRoad = true;
-                }
-                
-                if (leftEncounter instanceof WorldBorder || leftEncounter instanceof RuinedCar)
-                {
-                    validObstacle = false;
+                    if (leftEncounter instanceof WorldBorder || leftEncounter instanceof RuinedCar || leftEncounter instanceof FallenTree
+                    || leftEncounter instanceof SignPost)
+                    {
+                        return false;
+                    }
                 }
             }
         }
         else
         {
-            ArrayList<Actor> rightEncounters = (ArrayList<Actor>)getObjectsAtOffset(getImage().getWidth() / 2, getImage().getHeight() / 2 - 5, Actor.class);
-            for (Actor rightEncounter : rightEncounters)
+            for (int i = 0; i < 2; i++)
             {
-                if (rightEncounter instanceof BasicRoad || rightEncounter instanceof Road)
+                ArrayList<Actor> rightEncounters = (ArrayList<Actor>)getObjectsAtOffset(getImage().getWidth() / 2, i * (getImage().getHeight() / 2) + 4, Actor.class);
+                for (Actor rightEncounter : rightEncounters)
                 {
-                    validRoad = true;
-                }
-                
-                if (rightEncounter instanceof WorldBorder || rightEncounter instanceof RuinedCar)
-                {
-                    validObstacle = false;
+                    if (rightEncounter instanceof WorldBorder || rightEncounter instanceof RuinedCar || rightEncounter instanceof FallenTree || rightEncounter instanceof SignPost)
+                    {
+                        return false;
+                    }
                 }
             }
         }
-        return validRoad && validObstacle;
+        return true;
+    }
+    public void powerUp()
+    {
+        if(knifeTimer.millisElapsed() >= 5000)
+        {
+            canIndi = true;
+            if(isTouching(Prophet.class) && Greenfoot.mouseClicked(null) || isTouching(Archer.class) && Greenfoot.mouseClicked(null)  || isTouching(CrossBower.class)
+            && Greenfoot.mouseClicked(null))
+            {
+                sound.play();
+                canIndi = false;
+                world.enemyHealth--;
+                if(world.enemyHealth == 2)
+                {
+                    world.removeObject(world.archer);
+                }
+                else if(world.enemyHealth == 1)
+                {
+                    world.removeObject(world.crossbower);
+                }
+                knifeTimer.mark();
+            }
+        }
     }
 
     private void movement(int x, int y)

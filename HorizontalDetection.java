@@ -8,15 +8,15 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class HorizontalDetection extends DetectionTool
 {
-    public HorizontalDetection(Actor actor, int offset)
+    public HorizontalDetection(Actor actor, int direction)
     {
         followActor = actor;
-        offsetMultiplication = offset;
+        directionMovement = (int)Math.signum(direction);
         setImage(horizontalImage);
     }
     
     public void act()
     {
-        setLocation(followActor.getX() + offsetMultiplication * getImage().getWidth() / 2, followActor.getY());
+        setLocation(followActor.getX() + directionMovement * getImage().getWidth() / 2, followActor.getY());
     }
 }

@@ -38,21 +38,21 @@ public class Archer extends Enemy
     {
         if(world.prophet.walkingDirection == "left")
         {
-            this.setLocation(world.crossbower.getX() - 20, world.prophet.getY());
+            setLocation(world.crossbower.getX() - 20, world.prophet.getY());
             keepLeft = true;
         }
         else if(world.prophet.walkingDirection == "right")
         {
-            this.setLocation(world.crossbower.getX() - 20, world.prophet.getY());
+            setLocation(world.crossbower.getX() - 20, world.prophet.getY());
             keepLeft = false;
         }
         else if(world.prophet.walkingDirection == "down")
         {
-            this.setLocation(world.prophet.getX(), world.crossbower.getY()  - 20);
+            setLocation(world.prophet.getX(), world.crossbower.getY()  - 20);
         }
         else if(world.prophet.walkingDirection == "up")
         {
-            this.setLocation(world.prophet.getX(), world.crossbower.getY()  - 20);
+            setLocation(world.prophet.getX(), world.crossbower.getY()  - 20);
         }
         if(keepLeft)
         {

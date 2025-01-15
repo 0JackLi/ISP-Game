@@ -17,6 +17,7 @@ public class MyWorld extends World
     Random random = new Random();
     PearlSky sky = new PearlSky();
     water Water = new water();
+    Knife knife;
     GreenfootImage waterImage = Water.getImage();
     BasicRoad basicroad = new BasicRoad(); 
     VerticalBasicRoad vbasicroad = new VerticalBasicRoad();
@@ -41,15 +42,28 @@ public class MyWorld extends World
     MusicNote note = new MusicNote();
     SEComic sEComic = new SEComic();
     Sign sign2 = new Sign();
-    int score = 0;
+    public int score = 0;
     Label scoreLabel = new Label("Score: " + score, 40);
+    Label secLabel = new Label("Time: " + 30, 20);
+    Label endLabel = new Label("Time: 300", 25);
     SimpleTimer noteSpawnTime = new SimpleTimer();
     SimpleTimer strengthTimer = new SimpleTimer();
+    SimpleTimer gameTime = new SimpleTimer();
+    SimpleTimer delay = new SimpleTimer();
     public static final int WORLD_WIDTH = 600;
     public static final int WORLD_HEIGHT = 400;
     Prophet prophet;
     CrossBower crossbower;
     Archer archer; 
+    int sec = 30;
+    int gameSec = 300;
+    boolean actStrength = false;
+    public int playerHealth = 4;
+    public int enemyHealth = 3;
+    Indicator indi = new Indicator();
+    GreenfootImage indiIm = indi.getImage();
+    GreenfootSound sound; 
+    boolean isT = true, isF = true;
     public MyWorld()
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
@@ -58,15 +72,55 @@ public class MyWorld extends World
         prepareWater();
         prepareFirstWorld();
         setBackground(grassImage);
-        prepareCharacter(); 
+        prepareCharacter();
         addObject(scoreLabel, 350, 37);
+        addObject(endLabel, 50, 50);
+        sound = new GreenfootSound("sounds/level1.mp3");
+        sound.play();
     }
     public void act()
     {
+        
+        if(enemyHealth <= 2 && isT)
+        {
+            score = 0;
+            sound.stop();
+            removeObjects(getObjects(Actor.class));
+            prepareSecondWorld();
+            prepareCharacter2(2); 
+            isT = false;
+            actStrength = false;
+            addObject(scoreLabel, 350, 37);
+            addObject(endLabel, 50, 50);
+            sound = new GreenfootSound("sounds/level2.mp3");
+            sound.play();
+            sec = 30;
+        }
+        else if(enemyHealth <= 1 && isF)
+        {
+            score = 0;
+            sound.stop();
+            removeObjects(getObjects(Actor.class));
+            prepareFinalWorld();
+            prepareCharacter2(3);
+            isF = false;
+            actStrength = false;
+            addObject(scoreLabel, 350, 37);
+            addObject(endLabel, 50, 50);
+            sound = new GreenfootSound("sounds/level3.mp3");
+            sound.play();
+            sec = 30;
+        }
+        checkGameEnd();
         scoreLabel.setValue("Score: " + score + "/1000");
         spawnSomeNotes();
         checkScore();
         checkOnClick();
+        gameCountDown();
+        if(actStrength)
+        {
+            strengthBar();
+        }
     }
 
     /**
@@ -89,12 +143,24 @@ public class MyWorld extends World
             noteSpawnTime.mark();
         }
     }
-    
+    private void gameCountDown()
+    {
+        if(gameTime.millisElapsed() >= 1000)
+        {
+            gameSec--;
+            endLabel.setValue("Time: " + gameSec);
+            gameTime.mark();
+        }
+    }
     private void checkScore()
     {
         if(score >= 1000)
         {
             sEComic.setImage(new GreenfootImage("SEcomic.jpg"));
+        }
+        else
+        {
+            sEComic.setImage(new GreenfootImage("SEBComic.png"));
         }
     }
     private void checkOnClick()
@@ -104,7 +170,13 @@ public class MyWorld extends World
             removeObject(sEComic);
             removeObject(scoreLabel);
             red = new Red();
-            addObject(red, 250, 200);
+            addObject(red, 450, 50);
+            addObject(secLabel, 450, 50);
+            actStrength = true;
+            kirsten.num = 2;
+            score = 0;
+            GreenfootSound so = new GreenfootSound("sounds/Hypercharge.mp3");
+            so.play();
         }
     }
     public void spawnNote()
@@ -128,6 +200,7 @@ public class MyWorld extends World
             addObject(note,  0 + k, 80);
         }
     }
+    
     private void prepareFirstWorld()
     {
         
@@ -344,9 +417,9 @@ public class MyWorld extends World
         august = new August();
         saydi = new Saydi();
         dieter = new Dieter();
-        prophet = new Prophet(1, 1);
+        prophet = new Prophet(1, 600);
         crossbower = new CrossBower();
-        Archer archer = new Archer();
+        archer = new Archer();
         addObject(dieter, 93, 376);
         addObject(saydi, 110, 376);
         addObject(august, 127, 376);
@@ -355,15 +428,95 @@ public class MyWorld extends World
         addObject(crossbower, 30, 80);
         addObject(prophet, 50, 80);
     }
+    private void prepareCharacter2(int s)
+    {
+        if(playerHealth == 4)
+        {
+            kirsten = new Kirsten();
+            august = new August();
+            saydi = new Saydi();
+            dieter = new Dieter();
+            addObject(dieter, 93, 376);
+            addObject(saydi, 110, 376);
+            addObject(august, 127, 376);
+            addObject(kirsten,147,376);
+        }
+        else if(playerHealth == 3)
+        {
+            kirsten = new Kirsten();
+            august = new August();
+            saydi = new Saydi();
+            addObject(saydi, 110, 376);
+            addObject(august, 127, 376);
+            addObject(kirsten,147,376);
+        }
+        else if(playerHealth == 2)
+        {
+            kirsten = new Kirsten();
+            august = new August();
+            addObject(august, 127, 376);
+            addObject(kirsten,147,376);
+        }
+        else
+        {
+            kirsten = new Kirsten();
+            addObject(kirsten, 147, 376);
+        }
+        if(enemyHealth == 3)
+        {
+            prophet = new Prophet(s, 600);
+            crossbower = new CrossBower();
+            archer = new Archer();
+            addObject(archer, 10, 80);
+            addObject(crossbower, 30, 80);
+            addObject(prophet, 50, 80);
+        }
+        else if(enemyHealth == 2)
+        {
+            prophet = new Prophet(s, 300);
+            crossbower = new CrossBower();
+            addObject(crossbower, 30, 80);
+            addObject(prophet, 50, 80);
+        }
+        else
+        {
+            prophet = new Prophet(s, 300);
+            addObject(prophet, 50, 80);
+        }
+    }
     private void strengthBar()
     {
         if(strengthTimer.millisElapsed() >= 1000)
         {
             GreenfootImage img = red.getImage();
-            int w = 60;
-            img.scale(w - 2, 30);
+            img.scale(img.getWidth() - 2, img.getHeight());
+            System.out.println("A");
+            red.setImage(img);
             strengthTimer.mark();
+            sec--;
+            secLabel.setValue(sec);
+            addObject(indi, 0, 0);
         }
+        if(kirsten.canIndi)
+        {
+            indiIm.setTransparency(255);
+        }
+        else
+        {
+            indiIm.setTransparency(0);
+        }
+        if(sec <= 0)
+        {
+            actStrength = false;
+            removeObject(red);
+            removeObject(secLabel);
+            removeObject(indi); 
+            sec = 30;
+            kirsten.num = 1;
+            addObject(sEComic, 510, 37);
+            addObject(scoreLabel, 350, 37);
+        }
+        kirsten.powerUp();
     }
     /**
      * Prepare the world for the start of the program.
@@ -409,12 +562,16 @@ public class MyWorld extends World
     
     public void addScore(int amount)
     {
-        score += amount;
+        if(!actStrength)
+        {
+            score += amount;
+        }
         if(score >= 1000)
         {
             score = 1000;
         }
     }
+
     private void addBorder()
     {
         addObject(new BlockBorder(240, 43), 149, 124);
@@ -430,6 +587,19 @@ public class MyWorld extends World
         {
             addObject(new HorizontalBorder(getWidth()), getWidth() / 2, (i % 2 == 0) ? 73 : getHeight());
             addObject(new VerticalBorder(getHeight()), i * getWidth() , getHeight() / 2); 
+        }
+    }
+    private void checkGameEnd()
+    {
+        if(enemyHealth <= 0)
+        {
+            sound.stop();
+            Greenfoot.setWorld(new WinningEndScreen("winner", score));
+        }
+        else if(playerHealth <= 0 || gameSec <= 0)
+        {
+            sound.stop();
+            Greenfoot.setWorld(new WinningEndScreen("loser", score));
         }
     }
 }

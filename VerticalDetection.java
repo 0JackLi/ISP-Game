@@ -8,15 +8,15 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class VerticalDetection extends DetectionTool
 {
-    public VerticalDetection(Actor actor, int offset)
+    public VerticalDetection(Actor actor, int direction)
     {
         followActor = actor;
-        offsetMultiplication = offset;
+        directionMovement = (int)Math.signum(direction);
         setImage(verticalImage);
     }
     
     public void act()
     {
-        setLocation(followActor.getX(), followActor.getY() + offsetMultiplication * getImage().getHeight() / 2);
+        setLocation(followActor.getX(), followActor.getY() + directionMovement * getImage().getHeight() / 2);
     }
 }

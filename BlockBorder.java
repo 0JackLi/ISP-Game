@@ -15,7 +15,7 @@ public class BlockBorder extends WorldBorder
     public BlockBorder(int imageWidth, int imageHeight)
     {
         super(imageWidth, imageHeight);
-        getImage().setTransparency(100);
+        getImage().setTransparency(0);
     }
     public void act()
     {

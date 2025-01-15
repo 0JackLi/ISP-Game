@@ -15,6 +15,7 @@ public class August extends Player
     GreenfootImage[] image = new GreenfootImage[6];
     GreenfootImage[] invertedImage = new GreenfootImage[6];
     SimpleTimer timer = new SimpleTimer();
+    GreenfootSound sound = new GreenfootSound("sounds/coin.mp3");
     boolean keepLeft = false;
     boolean isUp = false, isDown = false, isLeft = false, isRight = true;
     MyWorld world;
@@ -34,6 +35,7 @@ public class August extends Player
         keyDown();
         if(isTouching(MusicNote.class))
         {
+            sound.play();
             removeTouching(MusicNote.class);
             ((MyWorld) getWorld()).addScore(50);
         }

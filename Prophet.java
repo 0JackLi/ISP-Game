@@ -14,6 +14,7 @@ public class Prophet extends Enemy
      */    
     private boolean checkSideway;
     private int randomAct, reloadAct;
+    private static int maxSpeed;
     private VerticalDetection upwardDetection, downwardDetection;
     private HorizontalDetection leftwardDetection, rightwardDetection;
     public String walkingDirection; 
@@ -23,24 +24,23 @@ public class Prophet extends Enemy
     int k = 0;
     int speedX = 0, speedY = 0;
     boolean keepLeft = false;
-    public Prophet(int x, int y)
+    public Prophet(int maxSpeed, int time)
     {
-        checkSideway = true;
         randomAct = 0;
-        reloadAct = 600; // 60 acts / second, 600 acts in 10 seconds
-        upwardDetection = new VerticalDetection(this, -1);
-        downwardDetection = new VerticalDetection(this, 1);
-        leftwardDetection = new HorizontalDetection(this, -1);
-        rightwardDetection = new HorizontalDetection(this, 1);
-        
+        reloadAct = time; // 60 acts / second, 600 acts in maxSpeed0 seconds
         for(int i = 0; i < 6; i++)
         {
             image[i] = new GreenfootImage("prophet" + i + ".png");
             invertedImage[i] = new GreenfootImage("prophet" + i + ".png");
             invertedImage[i].mirrorHorizontally();
-            speedX = x;
-            speedY = y;
         }
+        
+        this.maxSpeed = maxSpeed;
+        
+        upwardDetection = new VerticalDetection(this, -maxSpeed);
+        downwardDetection = new VerticalDetection(this, maxSpeed);
+        leftwardDetection = new HorizontalDetection(this, -maxSpeed);
+        rightwardDetection = new HorizontalDetection(this, maxSpeed);
     }
     
     public void addedToWorld(World world)
@@ -64,12 +64,12 @@ public class Prophet extends Enemy
             randomMovement();
         
         directionMovement();
-        reloadAct = (reloadAct == 0) ? reloadAct : reloadAct - 1;
+        reloadAct = (reloadAct == 0) ? reloadAct : reloadAct - maxSpeed;
     }
     
     private void directionMovement()
     {
-        if(walkingDirection == "left")
+        if(keepLeft)
         {
             leftWalkAni();
         }
@@ -165,7 +165,7 @@ public class Prophet extends Enemy
         if(timer.millisElapsed() >= 100)
         {
             timer.mark();
-            k = (k + 1) % 6; 
+            k = (k + maxSpeed) % 6; 
             this.setImage(image[k]);
         }
     }
@@ -175,7 +175,7 @@ public class Prophet extends Enemy
         if(timer.millisElapsed() >= 100)
         {
             timer.mark();
-            k = (k + 1) % 6;
+            k = (k + maxSpeed) % 6;
             this.setImage(invertedImage[k]);
         }
     }
@@ -208,6 +208,7 @@ public class Prophet extends Enemy
             if(this.getX() < actor.getX())
             {
                 walkingDirection = "right";
+                keepLeft = false;
                 if(checkSideway())
                 {
                     movement(speedX, 0);
@@ -219,6 +220,7 @@ public class Prophet extends Enemy
             else
             {
                 walkingDirection = "left";
+                keepLeft = true;
                 if(checkSideway())
                 {
                     movement(-speedX, 0);
@@ -237,33 +239,35 @@ public class Prophet extends Enemy
         if (rightwardDetection.hasSpotted())
         {
             walkingDirection = "right";
+            keepLeft = false;
             checkSideway = true;
-            speedX = 1;
+            speedX = maxSpeed;
         }
         else if (leftwardDetection.hasSpotted())
         {
             walkingDirection = "left";
             checkSideway = true;
-            speedX = -1;
+            speedX = -maxSpeed;
+            keepLeft = true;
         }
         
         if (upwardDetection.hasSpotted())
         {
             walkingDirection = "up";
             checkSideway = false;
-            speedY = -1;
+            speedY = -maxSpeed;
         }
         else if (downwardDetection.hasSpotted())
         {
             walkingDirection = "down";
             checkSideway = false;
-            speedY = 1;
+            speedY = maxSpeed;
         }
     }
     
     private void shootBullet()
     {
-        getWorld().addObject(new Bullet((int)Math.signum(speedX), (int)Math.signum(speedY)), getX() + (int)Math.signum(speedX) * getImage().getWidth() / 2, getY() + (int)Math.signum(speedY) * getImage().getHeight() / 2); 
+        getWorld().addObject(new Bullet((int)Math.signum(speedX), (int)Math.signum(speedY), maxSpeed + 1), getX() + (int)Math.signum(speedX) * getImage().getWidth() / 2, getY() + (int)Math.signum(speedY) * getImage().getHeight() / 2); 
         reloadAct = 600;
     }
     
@@ -278,12 +282,14 @@ public class Prophet extends Enemy
                 if (Greenfoot.getRandomNumber(2) == 1)
                 {
                     walkingDirection = "left";
-                    speedX = -1;
+                    keepLeft = true;
+                    speedX = -maxSpeed;
                 }
                 else
                 {
                     walkingDirection = "right";
-                    speedX = 1;
+                    keepLeft = false;
+                    speedX = maxSpeed;
                 }
                 speedY = 0;
             }
@@ -293,12 +299,12 @@ public class Prophet extends Enemy
                 if (Greenfoot.getRandomNumber(2) == 1)
                 {
                     walkingDirection = "up";
-                    speedY = -1;
+                    speedY = -maxSpeed;
                 }
                 else
                 {
                     walkingDirection = "down";
-                    speedY = 1;
+                    speedY = maxSpeed;
                 }
                 speedX = 0;
             }

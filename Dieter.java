@@ -17,6 +17,7 @@ public class Dieter extends Player
     SimpleTimer timer = new SimpleTimer();
     boolean keepLeft = false;
     boolean isUp = false, isDown = false, isLeft = false, isRight = true; 
+    GreenfootSound sound = new GreenfootSound("sounds/coin.mp3");
     MyWorld world;
     public Dieter()
     {
@@ -34,6 +35,7 @@ public class Dieter extends Player
         keyDown();
          if(isTouching(MusicNote.class))
         {
+            sound.play();
             removeTouching(MusicNote.class);
             ((MyWorld) getWorld()).addScore(50);
         }

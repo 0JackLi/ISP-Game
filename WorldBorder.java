@@ -9,7 +9,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public abstract class WorldBorder extends Actor
 {
     protected static GreenfootImage borderImage;
-    public static final boolean hideBorder = false;
+    public static final boolean hideBorder = true;
     public WorldBorder(int imageWidth, int imageHeight)
     {
         borderImage = new GreenfootImage(imageWidth, imageHeight);
