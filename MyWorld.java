@@ -42,7 +42,7 @@ public class MyWorld extends World
     MusicNote note = new MusicNote();
     SEComic sEComic = new SEComic();
     Sign sign2 = new Sign();
-    public int score = 0;
+    public int score = 1000;
     Label scoreLabel = new Label("Score: " + score, 40);
     Label secLabel = new Label("Time: " + 30, 20);
     Label endLabel = new Label("Time: 300", 25);
@@ -83,7 +83,7 @@ public class MyWorld extends World
         
         if(enemyHealth <= 2 && isT)
         {
-            score = 0;
+            score = 1000;
             sound.stop();
             removeObjects(getObjects(Actor.class));
             prepareSecondWorld();
@@ -98,7 +98,7 @@ public class MyWorld extends World
         }
         else if(enemyHealth <= 1 && isF)
         {
-            score = 0;
+            score = 1000;
             sound.stop();
             removeObjects(getObjects(Actor.class));
             prepareFinalWorld();
@@ -593,12 +593,12 @@ public class MyWorld extends World
         if(enemyHealth <= 0)
         {
             sound.stop();
-            Greenfoot.setWorld(new WinningEndScreen("winner", score));
+            Greenfoot.setWorld(new WinningEndScreen("winner", gameSec));
         }
         else if(playerHealth <= 0 || gameSec <= 0)
         {
             sound.stop();
-            Greenfoot.setWorld(new WinningEndScreen("loser", score));
+            Greenfoot.setWorld(new WinningEndScreen("loser", gameSec/2));
         }
     }
 }

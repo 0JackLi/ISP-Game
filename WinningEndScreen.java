@@ -31,7 +31,7 @@ public class WinningEndScreen extends World
             gameOverDisplay = new Label("You lose", 90);
             outro = new GreenfootSound("sounds/losingoutro.mp3");
         }
-        Label highScoreLabel = new Label("Final Score: " + score, 40);
+        Label highScoreLabel = new Label("Final Score: " + score * 20, 40);
         backImage.scale(600, 400);
         setBackground(backImage);
 
