@@ -490,7 +490,6 @@ public class MyWorld extends World
         {
             GreenfootImage img = red.getImage();
             img.scale(img.getWidth() - 2, img.getHeight());
-            System.out.println("A");
             red.setImage(img);
             strengthTimer.mark();
             sec--;

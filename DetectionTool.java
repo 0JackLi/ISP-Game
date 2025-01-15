@@ -1,4 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import java.util.*;
 
 /**
  * Write a description of class DetectionTool here.
@@ -14,7 +15,7 @@ public abstract class DetectionTool extends Actor
     protected int directionMovement;
     public DetectionTool()
     {
-        horizontalImage = new GreenfootImage(200, 3);
+        horizontalImage = new GreenfootImage(150, 3);
         verticalImage = new GreenfootImage(3, 100);
         horizontalImage.setColor(Color.BLUE);
         verticalImage.setColor(Color.BLUE);
@@ -31,17 +32,26 @@ public abstract class DetectionTool extends Actor
     public boolean hasSpotted()
     {
         Player spottedPlayer = (Player)getOneIntersectingObject(Player.class);
-        WorldBorder visionBlocker = (WorldBorder)getOneIntersectingObject(WorldBorder.class);
+        ArrayList<BlockBorder> visionBlockers = (ArrayList<BlockBorder>)getIntersectingObjects(BlockBorder.class);
+        BlockBorder visionBlocker = null;
+        int closestHeight = Integer.MAX_VALUE;
+        for (BlockBorder blocker : visionBlockers)
+        {
+            if (Math.abs(blocker.getY() - followActor.getY()) < closestHeight)
+            {
+                closestHeight = Math.abs(blocker.getY() - followActor.getY());
+                visionBlocker = blocker;
+            }
+        }
+        
         if (spottedPlayer != null)
         {
-            if (visionBlocker != null && visionBlocker instanceof BlockBorder)
+            if (visionBlocker != null)
             {
-                double playerDistance = Math.sqrt(Math.pow(spottedPlayer.getX() - getX(), 2) + Math.pow(spottedPlayer.getY() - getY(), 2)); //(Math.pow(visionBlocker.getX() - getX(), 2)
-                double blockerDistance = Math.sqrt(Math.pow(visionBlocker.getX() - getX(), 2) + Math.pow(visionBlocker.getY() - getY(), 2));
-                if (playerDistance > blockerDistance) {
-                    return false; // Player is behind the blocker
-                }
-                //double blockerDistance = visionBlocker.getY() + Math.signum(getY() - visionBlocker.getY()) * visionBlocker.getImage().getHeight() / 2 - getY();
+                double playerDistance = Math.sqrt(Math.pow(spottedPlayer.getX() - followActor.getX(), 2) + Math.pow(spottedPlayer.getY() - followActor.getY(), 2)); //(Math.pow(visionBlocker.getX() - getX(), 2)
+                double blockerDistance = visionBlocker.getY() + Math.signum(followActor.getY() - visionBlocker.getY()) * visionBlocker.getImage().getHeight() / 2 - followActor.getY();
+                System.out.println(visionBlocker.getY() + ", " + visionBlocker.getImage().getHeight() / 2 + ", " + followActor.getY());
+                System.out.println(playerDistance + ", " + blockerDistance);
                 return playerDistance <= blockerDistance;
             }
 
