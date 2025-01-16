@@ -23,7 +23,7 @@ public class WinningEndScreen extends World
         super(600, 400, 1); 
         if(k.equals("winner"))
         {
-            gameOverDisplay = new Label("Winner", 90);
+            gameOverDisplay = new Label("Winner\n Survival is sufficient", 60);
             outro = new GreenfootSound("sounds/winningoutro.mp3");
         }
         else
